@@ -49,13 +49,13 @@ struct ContentView: View {
                             viewModel.addLocation()
                         } label: {
                             Image(systemName: "plus")
+                                .padding()
+                                .background(.black.opacity(0.75))
+                                .foregroundColor(.white)
+                                .font(.title)
+                                .clipShape(Circle())
+                                .padding(.trailing)
                         }
-                        .padding()
-                        .background(.black.opacity(0.75))
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .clipShape(Circle())
-                        .padding(.trailing)
                     }
                 }
             }
@@ -72,6 +72,23 @@ struct ContentView: View {
             .background(.blue)
             .foregroundColor(.white)
             .clipShape(Capsule())
+            
+            // authentication failure
+            .alert("Authentication Error", isPresented: $viewModel.isErrorAlertActive) {
+                Button("Try again") {
+                    viewModel.authenticate()
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("You didn't pass the authentication!")
+            }
+            
+            // no biometrics
+            .alert("Biometrics Error", isPresented: $viewModel.isBiometricsAlertActive) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Your device doesn't have TouchID or FaceID")
+            }
         }
     }
 }
